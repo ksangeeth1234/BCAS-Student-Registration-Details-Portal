@@ -1,0 +1,6 @@
+{
+  "name": "BCAS Student Registration Details Portal",
+  "description": "Search for your BCAS student record, view existing registration information, and update permitted details securely.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

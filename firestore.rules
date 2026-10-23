@@ -1,0 +1,51 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'ksangeeth179@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Student Registration Details collection
+    // Permitted for students to read and update, and administrators to import and manage
+    match /students/{studentId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if true;
+    }
+
+    // Admin profiles and metadata
+    match /admins/{adminId} {
+      allow read, write: if true;
+    }
+
+    // Master Excel Workbooks History and Active Meta
+    match /workbooks/{workbookId} {
+      allow read, write: if true;
+    }
+
+    // Audit trail of modifications
+    match /auditLogs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Global Portal Settings (e.g. editable fields config)
+    match /settings/{settingId} {
+      allow read, write: if true;
+    }
+
+    // Connectivity test collection
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

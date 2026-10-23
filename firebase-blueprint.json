@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Master BCAS Student registration record matching all 30 Excel columns",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Original record ID from Excel" },
+        "leadId": { "type": "string", "description": "Lead identifier" },
+        "Counsellor": { "type": "string", "description": "Assigned counsellor name" },
+        "StudentNumber": { "type": "string", "description": "Unique student number (e.g. BCAS-2024-001)" },
+        "RegisteredDate": { "type": "string", "description": "Date registered" },
+        "IntakeMonth": { "type": "string", "description": "Intake month" },
+        "IntakeYear": { "type": "string", "description": "Intake year" },
+        "StudentName": { "type": "string", "description": "Full name of the student" },
+        "CounsellorsBranch": { "type": "string", "description": "Counsellor's branch" },
+        "AcademicBranch": { "type": "string", "description": "Academic campus branch" },
+        "Course": { "type": "string", "description": "Enrolled course" },
+        "PaymentPendingStatus": { "type": "string", "description": "Payment pending flag or status" },
+        "status": { "type": "string", "description": "Enrollment status" },
+        "mode": { "type": "string", "description": "Mode of study (Full-time / Part-time / Online)" },
+        "courseType": { "type": "string", "description": "Course type / level" },
+        "mobile": { "type": "string", "description": "Student primary mobile phone number" },
+        "email": { "type": "string", "description": "Student email address" },
+        "batchName": { "type": "string", "description": "Assigned batch name" },
+        "address": { "type": "string", "description": "Residential address" },
+        "nic": { "type": "string", "description": "National Identity Card / Passport number" },
+        "dob": { "type": "string", "description": "Date of birth" },
+        "citizenship": { "type": "string", "description": "Citizenship/Nationality" },
+        "hasSpecialNeeds": { "type": "string", "description": "Whether student has special needs (Yes/No)" },
+        "specialNeedsReason": { "type": "string", "description": "Special needs details if applicable" },
+        "remark": { "type": "string", "description": "Staff remarks" },
+        "parentName": { "type": "string", "description": "Parent or guardian name" },
+        "parentMobile": { "type": "string", "description": "Parent or guardian contact phone number" },
+        "qualifications": { "type": "string", "description": "Prior educational qualifications" },
+        "bundleCourseId": { "type": "string", "description": "Bundle course identifier" },
+        "paymentType": { "type": "string", "description": "Payment scheme / type" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp of last update" },
+        "lastUpdatedBy": { "type": "string", "description": "UID or identifier of the editor" }
+      },
+      "required": ["StudentNumber", "StudentName"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Administrator account metadata",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "Admin email" },
+        "role": { "type": "string", "description": "Admin role title" },
+        "addedAt": { "type": "string", "description": "Timestamp added" }
+      },
+      "required": ["email", "role"]
+    },
+    "Workbook": {
+      "title": "Workbook",
+      "description": "Metadata of loaded Master Excel file",
+      "type": "object",
+      "properties": {
+        "fileName": { "type": "string", "description": "Name of the Excel file" },
+        "fileSize": { "type": "string", "description": "Size in KB/MB" },
+        "uploadedAt": { "type": "string", "description": "Upload timestamp" },
+        "uploadedBy": { "type": "string", "description": "Admin who uploaded" },
+        "totalRecords": { "type": "string", "description": "Total records count" },
+        "activeSheet": { "type": "string", "description": "Selected worksheet name" },
+        "sheetNames": { "type": "string", "description": "JSON string of available sheets" }
+      },
+      "required": ["fileName", "uploadedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Audit record of changes made to student details",
+      "type": "object",
+      "properties": {
+        "studentNumber": { "type": "string", "description": "Student number updated" },
+        "studentName": { "type": "string", "description": "Student name" },
+        "editorEmail": { "type": "string", "description": "Email or identifier of editor" },
+        "editorType": { "type": "string", "description": "student or admin" },
+        "timestamp": { "type": "string", "description": "Timestamp of change" },
+        "changedFields": { "type": "string", "description": "JSON string of changed field names and delta" }
+      },
+      "required": ["studentNumber", "timestamp"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "System configuration such as student editable fields list",
+      "type": "object",
+      "properties": {
+        "editableFields": { "type": "string", "description": "JSON array of field keys editable by students" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" },
+        "updatedBy": { "type": "string", "description": "Admin email" }
+      },
+      "required": ["editableFields"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Collection of student registration records"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Collection of authorized admin users"
+    },
+    "/workbooks/{workbookId}": {
+      "schema": { "$ref": "#/entities/Workbook" },
+      "description": "Master Excel file history and active metadata"
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Audit logs of changes made to student records"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Setting" },
+      "description": "Global application settings"
+    }
+  }
+}
