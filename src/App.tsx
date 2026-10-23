@@ -242,8 +242,8 @@ export default function App() {
                   <StudentProfile
                     student={selectedStudent}
                     onBackToSearch={() => setSelectedStudent(null)}
-                    onStartEdit={(fullAdmin) => {
-                      setIsFullAdminEdit(Boolean(fullAdmin));
+                    onStartEdit={() => {
+                      setIsFullAdminEdit(isEffectiveAdmin);
                       setIsEditModalOpen(true);
                     }}
                     isSaving={isSavingChanges}
@@ -287,7 +287,7 @@ export default function App() {
           onConfirmCorrect={() => setShowCertificateNameModal(false)}
           onStartNameEdit={() => {
             setShowCertificateNameModal(false);
-            setIsFullAdminEdit(true);
+            setIsFullAdminEdit(isEffectiveAdmin);
             setIsEditModalOpen(true);
           }}
         />
@@ -304,7 +304,7 @@ export default function App() {
         />
       )}
 
-      {/* B. Student Edit Modal (Supports full 30 fields edit) */}
+      {/* B. Student Edit Modal (Follows institutional permissions) */}
       {selectedStudent && isEditModalOpen && (
         <StudentEditModal
           student={selectedStudent}
@@ -315,8 +315,8 @@ export default function App() {
           }}
           onSave={handleSaveStudentDetails}
           editableFieldKeys={editableFields}
-          isAdmin={isEffectiveAdmin || isFullAdminEdit}
-          isFullAdminEdit={isFullAdminEdit}
+          isAdmin={isEffectiveAdmin}
+          isFullAdminEdit={isEffectiveAdmin}
         />
       )}
 

@@ -104,18 +104,21 @@ export const FIELD_DISPLAY_LABELS: Record<keyof StudentRecord, string> = {
   lastUpdatedBy: 'Last Updated By'
 };
 
-// Default permitted fields for student editing per requirement 7
+// Permitted fields for student self-editing per strict institutional policy:
+// A: StudentName only
+// B: All contact fields (mobile, email, address)
+// C: NIC / Passport No & Date of Birth (qualifications view only)
+// D: Parent / Guardian fields (parentName, parentMobile)
+// E: Counsellor / Admin info is completely hidden from students
 export const DEFAULT_STUDENT_EDITABLE_FIELDS: (keyof StudentRecord)[] = [
+  'StudentName',
   'mobile',
   'email',
   'address',
+  'nic',
   'dob',
-  'citizenship',
   'parentName',
-  'parentMobile',
-  'qualifications',
-  'hasSpecialNeeds',
-  'specialNeedsReason'
+  'parentMobile'
 ];
 
 export interface AuditLogEntry {

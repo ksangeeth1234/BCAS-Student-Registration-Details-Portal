@@ -192,13 +192,22 @@ export const StudentProfile: React.FC<StudentProfileProps> = ({
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => onStartEdit(true)}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                isAdmin 
+                  ? 'bg-blue-50 text-blue-900 border border-blue-200' 
+                  : 'bg-amber-50 text-amber-900 border border-amber-200'
+              }`}>
+                {isAdmin ? 'Admin: Full Access' : 'Name Editable • Academic Locked'}
+              </span>
+              <button
+                onClick={() => onStartEdit(isAdmin)}
+                className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3.5 gap-x-6 text-xs sm:text-sm">
@@ -263,13 +272,18 @@ export const StudentProfile: React.FC<StudentProfileProps> = ({
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => onStartEdit(true)}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
+                All Editable
+              </span>
+              <button
+                onClick={() => onStartEdit(isAdmin)}
+                className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3.5 gap-x-6 text-xs sm:text-sm">
@@ -313,13 +327,22 @@ export const StudentProfile: React.FC<StudentProfileProps> = ({
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => onStartEdit(true)}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                isAdmin 
+                  ? 'bg-blue-50 text-blue-900 border border-blue-200' 
+                  : 'bg-amber-50 text-amber-900 border border-amber-200'
+              }`}>
+                {isAdmin ? 'Admin: Full Access' : 'NIC & DOB Editable • Qualifications Locked'}
+              </span>
+              <button
+                onClick={() => onStartEdit(isAdmin)}
+                className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3.5 gap-x-6 text-xs sm:text-sm">
@@ -357,6 +380,9 @@ export const StudentProfile: React.FC<StudentProfileProps> = ({
               <div className="text-[11px] font-semibold text-slate-500 mb-0.5 flex items-center gap-1.5">
                 <Award className="w-3.5 h-3.5 text-red-600" />
                 <span>{FIELD_DISPLAY_LABELS.qualifications}</span>
+                {!isAdmin && (
+                  <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>
+                )}
               </div>
               <div className="text-slate-800 bg-slate-50 p-3 rounded-xl border border-slate-200 break-words leading-relaxed font-medium">
                 {student.qualifications || 'No qualifications listed'}
@@ -381,13 +407,18 @@ export const StudentProfile: React.FC<StudentProfileProps> = ({
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => onStartEdit(true)}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
+                All Editable
+              </span>
+              <button
+                onClick={() => onStartEdit(isAdmin)}
+                className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
@@ -405,109 +436,123 @@ export const StudentProfile: React.FC<StudentProfileProps> = ({
           </div>
         </section>
 
-        {/* Section E: Counsellor & Additional Details */}
-        <section className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 sm:p-6 hover:shadow-sm transition-shadow">
-          <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center shrink-0 border border-blue-100">
-                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-900" />
+        {/* Section E: Counsellor & Additional Details (Admin Only - Hidden from Students per institutional policy) */}
+        {isAdmin && (
+          <section className="bg-white rounded-2xl border border-blue-200 shadow-xs p-4 sm:p-6 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center shrink-0 border border-blue-100">
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-900" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-sm sm:text-base font-bold text-blue-950">
+                      E. Counsellor & Additional Information
+                    </h2>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-900 border border-blue-300">
+                      Admin Only View
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500">
+                    Assigned counsellor, payment scheme, and administrative remarks
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => onStartEdit(true)}
+                className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3.5 gap-x-6 text-xs sm:text-sm">
+              <div>
+                <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.Counsellor}</div>
+                <div className="text-slate-900 font-bold">{student.Counsellor || '—'}</div>
               </div>
               <div>
-                <h2 className="text-sm sm:text-base font-bold text-blue-950">
-                  E. Counsellor & Additional Information
-                </h2>
-                <p className="text-[11px] text-slate-500">
-                  Assigned counsellor, payment scheme, and administrative remarks
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => onStartEdit(true)}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3.5 gap-x-6 text-xs sm:text-sm">
-            <div>
-              <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.Counsellor}</div>
-              <div className="text-slate-900 font-bold">{student.Counsellor || '—'}</div>
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.CounsellorsBranch}</div>
-              <div className="text-slate-800 font-medium">{student.CounsellorsBranch || '—'}</div>
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.PaymentPendingStatus}</div>
-              <div>{renderBadge(student.PaymentPendingStatus || 'Clear')}</div>
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.paymentType}</div>
-              <div className="text-slate-800 font-medium">{student.paymentType || '—'}</div>
-            </div>
-            <div className="sm:col-span-2">
-              <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.remark}</div>
-              <div className="text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs break-words font-medium">
-                {student.remark || 'No administrative remarks recorded.'}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section F: Technical IDs */}
-        <section className="bg-slate-50 rounded-2xl border border-slate-200 p-4 sm:p-6">
-          <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center shrink-0">
-                <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
+                <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.CounsellorsBranch}</div>
+                <div className="text-slate-800 font-medium">{student.CounsellorsBranch || '—'}</div>
               </div>
               <div>
-                <h2 className="text-sm sm:text-base font-bold text-blue-950">
-                  F. System Identifiers & Record Metadata
-                </h2>
-                <p className="text-[11px] text-slate-500">
-                  Underlying record identifiers from the Master Excel workbook
-                </p>
+                <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.PaymentPendingStatus}</div>
+                <div>{renderBadge(student.PaymentPendingStatus || 'Clear')}</div>
+              </div>
+              <div>
+                <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.paymentType}</div>
+                <div className="text-slate-800 font-medium">{student.paymentType || '—'}</div>
+              </div>
+              <div className="sm:col-span-2">
+                <div className="text-[11px] font-semibold text-slate-500 mb-0.5">{FIELD_DISPLAY_LABELS.remark}</div>
+                <div className="text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs break-words font-medium">
+                  {student.remark || 'No administrative remarks recorded.'}
+                </div>
               </div>
             </div>
-            <button
-              onClick={() => onStartEdit(true)}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
-          </div>
+          </section>
+        )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-3 gap-x-4 text-xs">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Record ID (id)</span>
-              <span className="font-mono text-slate-800 bg-white px-2 py-1 rounded border border-slate-200 inline-block break-all font-semibold">
-                {student.id || '—'}
-              </span>
+        {/* Section F: Technical IDs (Admin Only - Hidden from Students) */}
+        {isAdmin && (
+          <section className="bg-slate-50 rounded-2xl border border-slate-200 p-4 sm:p-6">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center shrink-0">
+                  <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-sm sm:text-base font-bold text-blue-950">
+                      F. System Identifiers & Record Metadata
+                    </h2>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800 border border-slate-300">
+                      Admin Only View
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500">
+                    Underlying record identifiers from the Master Excel workbook
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => onStartEdit(true)}
+                className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
             </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Lead ID (leadId)</span>
-              <span className="font-mono text-slate-800 bg-white px-2 py-1 rounded border border-slate-200 inline-block break-all font-semibold">
-                {student.leadId || '—'}
-              </span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-3 gap-x-4 text-xs">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Record ID (id)</span>
+                <span className="font-mono text-slate-800 bg-white px-2 py-1 rounded border border-slate-200 inline-block break-all font-semibold">
+                  {student.id || '—'}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Lead ID (leadId)</span>
+                <span className="font-mono text-slate-800 bg-white px-2 py-1 rounded border border-slate-200 inline-block break-all font-semibold">
+                  {student.leadId || '—'}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Bundle Course ID</span>
+                <span className="font-mono text-slate-800 bg-white px-2 py-1 rounded border border-slate-200 inline-block break-all font-semibold">
+                  {student.bundleCourseId || '—'}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Last Editor</span>
+                <span className="text-slate-700 truncate block font-medium">
+                  {student.lastUpdatedBy || 'System / Excel'}
+                </span>
+              </div>
             </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Bundle Course ID</span>
-              <span className="font-mono text-slate-800 bg-white px-2 py-1 rounded border border-slate-200 inline-block break-all font-semibold">
-                {student.bundleCourseId || '—'}
-              </span>
-            </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Last Editor</span>
-              <span className="text-slate-700 truncate block font-medium">
-                {student.lastUpdatedBy || 'System / Excel'}
-              </span>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
       </div>
 
@@ -515,19 +560,21 @@ export const StudentProfile: React.FC<StudentProfileProps> = ({
       <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-blue-50/80 rounded-2xl border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div>
           <p className="text-xs sm:text-sm text-blue-950 font-bold mb-0.5">
-            Need to update registration details?
+            {isAdmin ? 'Administrator Mode Active' : 'Need to update your registration details?'}
           </p>
           <p className="text-[11px] text-slate-600 font-medium">
-            You can edit all 30 registration columns and save changes permanently to the database.
+            {isAdmin
+              ? 'You have complete administrative access to view and edit all 30 Master Excel columns.'
+              : 'You can update your Student Name, Contact Information, NIC / Date of Birth, and Parent / Guardian details.'}
           </p>
         </div>
 
         <button
-          onClick={() => onStartEdit(true)}
+          onClick={() => onStartEdit(isAdmin)}
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-md shadow-red-600/25 transition-all cursor-pointer"
         >
           <Edit3 className="w-4 h-4 text-white" />
-          <span>Edit Registration Details</span>
+          <span>{isAdmin ? 'Edit All Details (Admin)' : 'Edit Registration Details'}</span>
         </button>
       </div>
 

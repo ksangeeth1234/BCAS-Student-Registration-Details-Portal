@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
               <span>Campus Branches</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Colombo City Campus • Kandy Campus • Kalmunai Campus • Jaffna Campus • Kurunegala Branch
+              Colombo City Campus • Kandy Campus • Kalmunai Campus • Jaffna Campus
             </p>
             <p className="text-xs text-slate-400 mt-2">
               Hotline: +94 11 255 9900 | info@bcas.lk
@@ -59,7 +59,7 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} BCAS Campus. All rights reserved.
           </div>
           
-          <div className="font-semibold text-slate-700 flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-full border border-slate-200">
+          <div className="font-semibold text-slate-700 flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-lg border border-slate-200">
             <span>Developed by</span>
             <span className="text-red-600 font-extrabold tracking-wide">PicoZen</span>
           </div>

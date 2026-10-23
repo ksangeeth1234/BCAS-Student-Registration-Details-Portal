@@ -37,9 +37,12 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
   student,
   isOpen,
   onClose,
-  onSave
+  onSave,
+  isAdmin = false,
+  isFullAdminEdit = false
 }) => {
-  // Full privileges granted to student and admin alike
+  const canEditAll = Boolean(isAdmin || isFullAdminEdit);
+
   const [formData, setFormData] = useState<StudentRecord>({
     id: student.id || '',
     leadId: student.leadId || '',
@@ -163,7 +166,9 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
         <div className="px-4 sm:px-6 py-2.5 bg-blue-50 border-b border-blue-200 text-xs flex items-center gap-2 text-blue-950 font-medium shrink-0">
           <Info className="w-4 h-4 text-blue-800 shrink-0" />
           <span>
-            You can view and modify all registration details. Changes are updated in the central BCAS database immediately.
+            {canEditAll
+              ? "Administrator Mode: You can view and edit all 30 registration columns. Changes are saved immediately to the central BCAS database."
+              : "Student Access: You can edit your Student Name, Contact Information, NIC / Date of Birth, and Parent / Guardian details. Academic records and qualifications are view-only."}
           </span>
         </div>
 
@@ -187,8 +192,12 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
                 <BookOpen className="w-4 h-4 text-red-600" />
                 <span>A. Academic & Student Information</span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200">
-                Editable
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                canEditAll 
+                  ? 'bg-blue-50 text-blue-900 border border-blue-200' 
+                  : 'bg-amber-50 text-amber-900 border border-amber-200'
+              }`}>
+                {canEditAll ? 'Admin: All Editable' : 'Student Name Editable • Academic Locked'}
               </span>
             </div>
 
@@ -204,7 +213,7 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
                   value={formData.StudentName}
                   onChange={(e) => setFormData({ ...formData, StudentName: e.target.value })}
                   placeholder="Enter full legal name as per NIC / Passport"
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600 font-bold text-slate-900"
+                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600 font-bold text-slate-900 shadow-2xs"
                 />
                 <p className="text-[10px] text-slate-500 mt-1">
                   This exact name will be printed on your BCAS award certificate.
@@ -215,15 +224,20 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.StudentNumber} <span className="text-red-500">*</span>
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.StudentNumber} <span className="text-red-500">*</span></span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
                   required
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.StudentNumber}
                   onChange={(e) => setFormData({ ...formData, StudentNumber: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white font-mono font-bold text-blue-950 focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 font-mono font-bold text-blue-950 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
                 {errors.StudentNumber && (
                   <p className="text-[11px] text-red-600 mt-1">{errors.StudentNumber}</p>
@@ -231,37 +245,51 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.Course}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.Course}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.Course}
                   onChange={(e) => setFormData({ ...formData, Course: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.AcademicBranch}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.AcademicBranch}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.AcademicBranch}
                   onChange={(e) => setFormData({ ...formData, AcademicBranch: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.status}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.status}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <select
+                  disabled={!canEditAll}
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 >
                   <option value="Active">Active</option>
                   <option value="Pending">Pending</option>
@@ -272,13 +300,17 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.mode}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.mode}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <select
+                  disabled={!canEditAll}
                   value={formData.mode}
                   onChange={(e) => setFormData({ ...formData, mode: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 >
                   <option value="Full Time">Full Time</option>
                   <option value="Part Time">Part Time</option>
@@ -288,68 +320,93 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.RegisteredDate}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.RegisteredDate}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="date"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.RegisteredDate}
                   onChange={(e) => setFormData({ ...formData, RegisteredDate: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.IntakeMonth}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.IntakeMonth}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.IntakeMonth}
                   onChange={(e) => setFormData({ ...formData, IntakeMonth: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.IntakeYear}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.IntakeYear}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.IntakeYear}
                   onChange={(e) => setFormData({ ...formData, IntakeYear: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.courseType}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.courseType}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.courseType}
                   onChange={(e) => setFormData({ ...formData, courseType: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.batchName}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.batchName}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.batchName}
                   onChange={(e) => setFormData({ ...formData, batchName: e.target.value })}
-                  className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
             </div>
           </div>
 
-          {/* Section B: Contact Information */}
+          {/* Section B: Contact Information (All data inside B can edit) */}
           <div className="space-y-3.5">
             <div className="flex items-center justify-between pb-2 border-b border-slate-200 text-xs sm:text-sm font-bold text-blue-950">
               <div className="flex items-center gap-2">
@@ -357,7 +414,7 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
                 <span>B. Contact Information</span>
               </div>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
-                Permitted
+                All Editable
               </span>
             </div>
 
@@ -414,22 +471,27 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
             </div>
           </div>
 
-          {/* Section C: Personal Information */}
+          {/* Section C: Personal Information (NIC & DOB editable, Qualifications view-only) */}
           <div className="space-y-3.5">
             <div className="flex items-center justify-between pb-2 border-b border-slate-200 text-xs sm:text-sm font-bold text-blue-950">
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4 text-red-600" />
                 <span>C. Personal Information</span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
-                Permitted
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                canEditAll 
+                  ? 'bg-blue-50 text-blue-900 border border-blue-200' 
+                  : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+              }`}>
+                {canEditAll ? 'Admin: All Editable' : 'NIC & DOB Editable • Qualifications View Only'}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.nic}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.nic}</span>
+                  <span className="text-[10px] text-emerald-600 font-semibold">Editable</span>
                 </label>
                 <input
                   type="text"
@@ -441,8 +503,9 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.dob}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.dob}</span>
+                  <span className="text-[10px] text-emerald-600 font-semibold">Editable</span>
                 </label>
                 <input
                   type="date"
@@ -453,26 +516,35 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.citizenship}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.citizenship}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.citizenship}
                   onChange={(e) => setFormData({ ...formData, citizenship: e.target.value })}
                   placeholder="e.g. Sri Lankan"
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.hasSpecialNeeds}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.hasSpecialNeeds}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <select
+                  disabled={!canEditAll}
                   value={formData.hasSpecialNeeds}
                   onChange={(e) => setFormData({ ...formData, hasSpecialNeeds: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 >
                   <option value="No">No</option>
                   <option value="Yes">Yes</option>
@@ -480,34 +552,47 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.specialNeedsReason}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.specialNeedsReason}</span>
+                  {!canEditAll && <span className="text-[10px] text-slate-400 font-normal">(View Only)</span>}
                 </label>
                 <input
                   type="text"
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.specialNeedsReason}
                   onChange={(e) => setFormData({ ...formData, specialNeedsReason: e.target.value })}
                   placeholder="Details of special accommodations"
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
 
+              {/* Prior Qualifications - STRICTLY VIEW ONLY FOR STUDENTS PER USER PROMPT */}
               <div className="sm:col-span-3">
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.qualifications}
+                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>{FIELD_DISPLAY_LABELS.qualifications}</span>
+                  <span className="text-[10px] text-slate-500 font-semibold bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">
+                    {canEditAll ? 'Admin Editable' : 'View Only (Institutional Record)'}
+                  </span>
                 </label>
                 <textarea
                   rows={2}
+                  disabled={!canEditAll}
+                  readOnly={!canEditAll}
                   value={formData.qualifications}
                   onChange={(e) => setFormData({ ...formData, qualifications: e.target.value })}
                   placeholder="Prior educational achievements, GCE O/L, GCE A/L, diplomas"
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 ${
+                    !canEditAll ? 'bg-slate-100 text-slate-600 cursor-not-allowed font-medium' : 'bg-white focus:outline-none focus:ring-2 focus:ring-red-600'
+                  }`}
                 />
               </div>
             </div>
           </div>
 
-          {/* Section D: Parent / Guardian Information */}
+          {/* Section D: Parent / Guardian Information (Can edit and view) */}
           <div className="space-y-3.5">
             <div className="flex items-center justify-between pb-2 border-b border-slate-200 text-xs sm:text-sm font-bold text-blue-950">
               <div className="flex items-center gap-2">
@@ -515,7 +600,7 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
                 <span>D. Parent or Guardian Information</span>
               </div>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
-                Permitted
+                All Editable & Viewable
               </span>
             </div>
 
@@ -548,123 +633,127 @@ export const StudentEditModal: React.FC<StudentEditModalProps> = ({
             </div>
           </div>
 
-          {/* Section E: Counsellor & Additional Information */}
-          <div className="space-y-3.5">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-200 text-xs sm:text-sm font-bold text-blue-950">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-red-600" />
-                <span>E. Counsellor, Payment & Administrative Information</span>
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200">
-                Editable
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.Counsellor}
-                </label>
-                <input
-                  type="text"
-                  value={formData.Counsellor}
-                  onChange={(e) => setFormData({ ...formData, Counsellor: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                />
+          {/* Section E: Counsellor & Additional Information (ADMIN ONLY - HIDDEN FROM STUDENTS PER PROMPT) */}
+          {canEditAll && (
+            <div className="space-y-3.5 border-t border-slate-200 pt-4">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 text-xs sm:text-sm font-bold text-blue-950">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-red-600" />
+                  <span>E. Counsellor, Payment & Administrative Information</span>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-900 border border-blue-300">
+                  Admin Exclusive Access
+                </span>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.CounsellorsBranch}
-                </label>
-                <input
-                  type="text"
-                  value={formData.CounsellorsBranch}
-                  onChange={(e) => setFormData({ ...formData, CounsellorsBranch: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                />
-              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {FIELD_DISPLAY_LABELS.Counsellor}
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.Counsellor}
+                    onChange={(e) => setFormData({ ...formData, Counsellor: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.PaymentPendingStatus}
-                </label>
-                <select
-                  value={formData.PaymentPendingStatus}
-                  onChange={(e) => setFormData({ ...formData, PaymentPendingStatus: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                >
-                  <option value="Clear">Clear</option>
-                  <option value="Pending 1st Installment">Pending 1st Installment</option>
-                  <option value="Pending 2nd Installment">Pending 2nd Installment</option>
-                  <option value="Pending 3rd Installment">Pending 3rd Installment</option>
-                  <option value="Overdue">Overdue</option>
-                  <option value="Partially Paid">Partially Paid</option>
-                </select>
-              </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {FIELD_DISPLAY_LABELS.CounsellorsBranch}
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.CounsellorsBranch}
+                    onChange={(e) => setFormData({ ...formData, CounsellorsBranch: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.paymentType}
-                </label>
-                <input
-                  type="text"
-                  value={formData.paymentType}
-                  onChange={(e) => setFormData({ ...formData, paymentType: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                />
-              </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {FIELD_DISPLAY_LABELS.PaymentPendingStatus}
+                  </label>
+                  <select
+                    value={formData.PaymentPendingStatus}
+                    onChange={(e) => setFormData({ ...formData, PaymentPendingStatus: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  >
+                    <option value="Clear">Clear</option>
+                    <option value="Pending 1st Installment">Pending 1st Installment</option>
+                    <option value="Pending 2nd Installment">Pending 2nd Installment</option>
+                    <option value="Pending 3rd Installment">Pending 3rd Installment</option>
+                    <option value="Overdue">Overdue</option>
+                    <option value="Partially Paid">Partially Paid</option>
+                  </select>
+                </div>
 
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {FIELD_DISPLAY_LABELS.remark}
-                </label>
-                <input
-                  type="text"
-                  value={formData.remark}
-                  onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                />
-              </div>
-            </div>
-          </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {FIELD_DISPLAY_LABELS.paymentType}
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.paymentType}
+                    onChange={(e) => setFormData({ ...formData, paymentType: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  />
+                </div>
 
-          {/* Section F: Technical IDs */}
-          <div className="space-y-3.5 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-              <Layers className="w-4 h-4 text-blue-900" />
-              <span>F. Master Excel Internal Identifiers</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-              <div>
-                <label className="block font-semibold text-slate-600 mb-1">id (Record ID)</label>
-                <input
-                  type="text"
-                  value={formData.id}
-                  onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-mono"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-600 mb-1">leadId</label>
-                <input
-                  type="text"
-                  value={formData.leadId}
-                  onChange={(e) => setFormData({ ...formData, leadId: e.target.value })}
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-mono"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-600 mb-1">bundleCourseId</label>
-                <input
-                  type="text"
-                  value={formData.bundleCourseId}
-                  onChange={(e) => setFormData({ ...formData, bundleCourseId: e.target.value })}
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-mono"
-                />
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {FIELD_DISPLAY_LABELS.remark}
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.remark}
+                    onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
+
+          {/* Section F: Technical IDs (ADMIN ONLY - HIDDEN FROM STUDENTS) */}
+          {canEditAll && (
+            <div className="space-y-3.5 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                <Layers className="w-4 h-4 text-blue-900" />
+                <span>F. Master Excel Internal Identifiers (Admin Only)</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <label className="block font-semibold text-slate-600 mb-1">id (Record ID)</label>
+                  <input
+                    type="text"
+                    value={formData.id}
+                    onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-600 mb-1">leadId</label>
+                  <input
+                    type="text"
+                    value={formData.leadId}
+                    onChange={(e) => setFormData({ ...formData, leadId: e.target.value })}
+                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-600 mb-1">bundleCourseId</label>
+                  <input
+                    type="text"
+                    value={formData.bundleCourseId}
+                    onChange={(e) => setFormData({ ...formData, bundleCourseId: e.target.value })}
+                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-mono"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
         </form>
 
